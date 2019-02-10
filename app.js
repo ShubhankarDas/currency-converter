@@ -24,3 +24,5 @@ app.get('/api/currency/convert', requestValidator.validate, currencyController.c
 app.listen(port, () => {
   logger.debug(`listening on port - ${port}...`)
 })
+
+module.exports = app

@@ -18,5 +18,10 @@ module.exports = {
       "RON","CHF","DKK",
       "INR","KRW","THB",
       "BRL","PLN","ILS"
-  ]
+  ],
+
+  //test urls
+  test_success_url: '/api/currency/convert?to=EUR&from=USD&value=3.734566',
+  test_no_query_url: '/api/currency/convert',
+  test_invalid_query_url: '/api/currency/convert?to=EU&from=US&value=asd'
 }
