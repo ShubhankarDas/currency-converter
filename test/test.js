@@ -6,6 +6,10 @@ const constants = require('../constants/constants')
 
 chai.use(require('chai-http'))
 
+// testing the api responses with status codes and it messages
+
+// ---- We could test the controller separately for better tests ----
+
 describe('## Currency converter Api', function () {
 
   // exit once test is completed
@@ -21,24 +25,18 @@ describe('## Currency converter Api', function () {
       .then((res)=>{
         expect(res).to.have.status(200)
       })
-  });
+  })
 
-  // return a bad request if queries are not found
-  it('should return bad request if queries not found.', async () => {
-    return await chai.request(app)
-      .get(constants.test_no_query_url)
-      .then((res) => {
-        expect(res).to.have.status(400)
-      })
-  });
+  // return a bad requests with their respective error messages
+  constants.tests.forEach( testCase => {
+    it(testCase.description, async () => {
+      return await chai.request(app)
+        .get(testCase.url)
+        .then((res) => {
+          expect(res).to.have.status(testCase.expected_status_code)
+          expect(res.error.text).to.equal(testCase.expected_error_text)
+        })
+    })
+  })
 
-  // return a bad request if queries are not properly given
-  it('should return bad request if queries not properly given.', async () => {
-    return await chai.request(app)
-      .get(constants.test_invalid_query_url)
-      .then((res) => {
-        expect(res).to.have.status(400)
-      })
-  });
-
-});
+})

@@ -1,26 +1,21 @@
-const networkManager = require('../network/networkManager')
-const constants = require('../constants/constants')
 const logger = require('../logger')
+const europeanCurrencyController = require('../lib/europeanCurrency')
 
 exports.convert = async (req, res) => {
   try{
     // Get query string values
     const { to, from, value } = req.query
 
-    const rateResponse = await networkManager.get(constants.exchange_base_url, {
-      [constants.params.base]: from,
-      [constants.params.symbols]: to
-    })
+    // Get current rate
+    const rateResponse = await europeanCurrencyController.getRate(to, from)
 
     // Check rate has errors
     if (rateResponse.error) {
       return res.status(502).send(rateResponse.error)
     }
 
-    const rate = rateResponse.rates[to]
-
     // Convert the value using the rate
-    const convertedValue = (rate * value).toFixed(2)
+    const convertedValue = (rateResponse * value).toFixed(2)
 
     // add to transaction log
     logger.info({
@@ -35,7 +30,10 @@ exports.convert = async (req, res) => {
 
   }
   catch(e){
-    logger.debug(e.message)
+
+    // here we can use a third party error monitor such as sentry
+
+    logger.error(e.message)
     res.status(500).send('Something went wrong.')
   }
 }

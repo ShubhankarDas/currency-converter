@@ -1,16 +1,11 @@
 const express = require('express')
-const dotenv = require('dotenv')
-
 const logger = require('./logger')
+
+// ---- We could use Babel and convert these files to es6 ---
 
 // Controllers
 const currencyController = require('./controllers/currencyController')
-const requestValidator = require('./middlewares/requestValidator')
-
-// load environment variables
-dotenv.load({
-  path: '.env'
-});
+const requestValidator = require('./middleware/requestValidator')
 
 // set port
 const port = process.env.PORT || 3000
